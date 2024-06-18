@@ -1,0 +1,6 @@
+/target
+.env
+.cargo
+.idea
+apps
+docker-compose.yml

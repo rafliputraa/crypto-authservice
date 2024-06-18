@@ -1,0 +1,24 @@
+[package]
+name = "crypto-authservice"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+actix-rt = "2.10.0"
+actix-web = "4.7.0"
+dotenv = "0.15.0"
+jsonwebtoken = "9.3.0"
+serde = "1.0.203"
+serde_json = "1.0.117"
+sqlx = {version = "0.7.4", features = ["postgres", "runtime-async-std-native-tls"]}
+chrono = "0.4.38"
+argon2 = "0.5.3"
+rand = "0.8.5"
+validator = {version = "0.14.0", features = ["derive"]}
+serde_derive = "1.0.203"
+lazy_static = "1.4.0"
+async-trait = "0.1.80"
+envy = "0.4.2"
+env_logger = "0.11.3"
+log = "0.4.21"
+derive_more = "0.99.18"
