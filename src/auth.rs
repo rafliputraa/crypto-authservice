@@ -20,11 +20,11 @@ use crate::helpers::{respond_created, respond_json};
 use crate::models::{LoginRequest, LoginResponse, RegisterRequest, User};
 use crate::server::AppState;
 
-const BEARER: &str = "Bearer ";
 
 #[derive(Debug, Serialize, Deserialize)]
 struct Claims {
-    sub: String,
+    user_id: i32,
+    username: String,
     exp: usize,
 }
 
@@ -35,7 +35,7 @@ pub async fn login(
     let user = is_user_exist_by_username(&state.db, body.username.clone()).await?;
     match verify_password(&user.password, &body.password) {
         Ok(_valid) => {
-            let token = create_jwt(&user.username, &CONFIG.jwt_secret)?;
+            let token = create_jwt(user.id, &user.username, &CONFIG.jwt_secret)?;
             let login_response = LoginResponse {
                 token,
             };
@@ -52,14 +52,15 @@ pub async fn login(
     }
 }
 
-fn create_jwt(username: &str, secret: &str) -> Result<String, ApiError> {
+fn create_jwt(uid: i32, username: &str, secret: &str) -> Result<String, ApiError> {
     let expiration = chrono::Utc::now()
         .checked_add_signed(chrono::Duration::hours(1))
         .expect("valid timestamp")
         .timestamp();
 
     let claims = Claims {
-        sub: username.to_owned(),
+        user_id: uid.to_owned(),
+        username: username.to_owned(),
         exp: expiration as usize,
     };
 
